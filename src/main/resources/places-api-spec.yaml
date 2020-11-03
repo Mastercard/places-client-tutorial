@@ -477,9 +477,8 @@ components:
       properties:
         distance:
           type: integer
-          description: Distance measurement for calculating the radius search. Optional
-            The length of distance from the centroid point. Value string(<15). The
-            default will be 3 units
+          description: Distance measurement for calculating the radius search.
+            The length of distance from the centroid point. Value integer(<15).
           format: int64
           example: 10
         place:
@@ -487,8 +486,8 @@ components:
         radiusSearch:
           type: boolean
           description: Switches on the radius search algorithm to be performed with
-            places from a given centroid. Value string (true) switches on the radius
-            search algorithm. NOTE - Latitude and Longitude are REQUIRED for radius
+            places from a given centroid. Value boolean (true) switches on the radius
+            search algorithm. NOTE - Distance, Latitude and Longitude are REQUIRED for radius
             search algorithm
           example: true
         unit:

@@ -27,7 +27,7 @@
 - [License](#license)
 
 ## Overview <a name="overview"/>
-This project showcases the use case of retrieving places and related information using the Places API [here](https://developer.mastercard.com/drafts/places-v2/staging/documentation/)
+This project showcases the use case of retrieving places and related information using the Places API [here](https://developer.mastercard.com/places/documentation/)
 
 ### Compatibility <a name="compatibility"></a>
  * [Java 8](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html) or later
@@ -37,7 +37,7 @@ This project showcases the use case of retrieving places and related information
 * [Using OAuth 1.0a to Access Mastercard APIs](https://developer.mastercard.com/platform/documentation/using-oauth-1a-to-access-mastercard-apis/)
 
 ### Tutorial <a name="tutorial"></a>
-A tutorial can be found [here](https://developer.mastercard.com/small-business-decision-enhancer/documentation/2/tutorials-and-guides/) for setting up and using this service.
+A tutorial can be found [here](https://developer.mastercard.com/places-v2/documentation/tutorials-and-guides/tutorials/places-api-client-tutorial/) for setting up and using this service.
 
 ## Frameworks <a name="frameworks"></a>
 - OpenAPI Generator
@@ -60,7 +60,7 @@ A tutorial can be found [here](https://developer.mastercard.com/small-business-d
     * A zip file will be downloaded automatically with your keys.
 3. Take note of the given **consumer key, keyalias, and keystore password** given upon the project creation.
 4. Copy the downloaded `.p12` file to `/src/main/resources`.
-5. Update the properties found in `src/main/java/com/mastercard/sbde/ApiService.java`.
+5. Update the properties found in `src/main/java/com/mastercard/places/ApiService.java`.
 
 ```java
     private static final String API_BASE_PATH = "https://sandbox.api.mastercard.com/location-intelligence/places-locator";
