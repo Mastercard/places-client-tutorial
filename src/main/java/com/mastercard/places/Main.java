@@ -57,7 +57,7 @@ public class Main {
         System.out.println(pagedMerchantCategoryCode.toString());
 
         // Get Merchant Category Code by Code
-        MerchantCategoryCode merchantCategoryCode = apiService.getMerchantCategoryCodeByCode("0003");
+        MerchantCategoryCode merchantCategoryCode = apiService.getMerchantCategoryCodeByCode("0004");
         System.out.println(merchantCategoryCode);
 
         // Merchant Industry Code API's
