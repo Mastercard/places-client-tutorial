@@ -37,7 +37,7 @@ This project showcases the use case of retrieving places and related information
 * [Using OAuth 1.0a to Access Mastercard APIs](https://developer.mastercard.com/platform/documentation/using-oauth-1a-to-access-mastercard-apis/)
 
 ### Tutorial <a name="tutorial"></a>
-A tutorial can be found [here](https://developer.mastercard.com/places-v2/documentation/tutorials-and-guides/tutorials/places-api-client-tutorial/) for setting up and using this service.
+A tutorial can be found [here](https://developer.mastercard.com/places/documentation/tutorials-and-guides/tutorials/places-api-client-tutorial/) for setting up and using this service.
 
 ## Frameworks <a name="frameworks"></a>
 - OpenAPI Generator
