@@ -1,0 +1,1316 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: apisupport@mastercard.com
+    name: API Support
+    url: https://developer.mastercard.com/support
+  description: Places API
+  termsOfService: https://developer.mastercard.com/terms-of-use
+  title: Places API
+  version: 2.0.0
+servers:
+- description: Production server (uses live data)
+  url: https://api.mastercard.com/location-intelligence/places-locator
+- description: Sandbox server (testing environment)
+  url: https://sandbox.api.mastercard.com/location-intelligence/places-locator
+tags:
+- description: Merchant Category Code Controller
+  name: Merchant Category Codes
+- description: Merchant Industry Code Controller
+  name: Merchant Industry Codes
+- description: Place Controller
+  name: Places
+paths:
+  /merchant-category-codes:
+    get:
+      deprecated: false
+      description: Returns a list of Merchant Category Codes ordered by Merchant Category
+        Code or Merchant Category Name, depending on user input. The list will be
+        ordered by Merchant Category Name by default.
+      operationId: getAllMerchantCategoryCodesUsingGet
+      parameters:
+      - description: Maximum number of items to return.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 25
+          example: 25
+          format: int32
+          type: integer
+        style: form
+      - description: Number of items to skip before returning the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          format: int32
+          type: integer
+        style: form
+      - description: Sort order for the metrics. Use -field for sort by field descending
+          and +field for sorting by field ascending. Multiple field are separated
+          by ','.
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          default: +merchantCategoryName
+          example: +merchantCategoryName
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedMerchantCategoryCode'
+          description: Successfully retrieved merchant category codes
+        "400":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST
+                    Description: Method argument type is invalid
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Offset index must not be less than zero
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Limit must not be less than one
+                    Recoverable: true
+                    Details: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Something was wrong with the request.
+        "401":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: UNAUTHORIZED
+                    Description: Project doesn't have access to the requested service
+                    Recoverable: false
+                    Details: Full authentication is required to access this resource
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Authentication information was missing or invalid.
+        "403":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: PERMISSION_DENIED
+                    Description: You don't seem authorized to do that
+                    Recoverable: false
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Insufficient permissions for interacting with the resource.
+      summary: Get all active merchant category codes
+      tags:
+      - Merchant Category Codes
+      x-accepts: application/json
+  /merchant-category-codes/mcc-codes/{mcc_code}:
+    get:
+      deprecated: false
+      description: Get merchant category code by code
+      operationId: getByMccCodeUsingGET
+      parameters:
+      - description: mcc_code
+        example: "0004"
+        explode: false
+        in: path
+        name: mcc_code
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantCategoryCode'
+          description: This code represents the category that a merchant location
+            may be under and is supported by most payment providers
+        "401":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: UNAUTHORIZED
+                    Description: Project doesn't have access to the requested service
+                    Recoverable: false
+                    Details: Full authentication is required to access this resource
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Authentication information was missing or invalid.
+        "403":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: PERMISSION_DENIED
+                    Description: You don't seem authorized to do that
+                    Recoverable: false
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Insufficient permissions for interacting with the resource.
+        "404":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: ENTITY_NOT_FOUND
+                    Description: You requested something we don't have
+                    Recoverable: false
+                    Details: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: URI didn't match an existing resource.
+      summary: Get merchant category code by code
+      tags:
+      - Merchant Category Codes
+      x-accepts: application/json
+  /merchant-industry-codes:
+    get:
+      deprecated: false
+      description: Returns a list of Merchant Industries ordered by Merchant Industry
+        Codes or Merchant Industry Name depending on user input. The list will be
+        ordered by Merchant Industry Name by default.
+      operationId: getAllIndustryCodesUsingGET
+      parameters:
+      - description: Maximum number of items to return.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 25
+          example: 25
+          format: int32
+          type: integer
+        style: form
+      - description: Number of items to skip before returning the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          format: int32
+          type: integer
+        style: form
+      - description: Sort order for the metrics. Use -field for sort by field descending
+          and +field for sorting by field ascending. Multiple field are separated
+          by ','.
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          default: +industryName
+          example: +industryName
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedMerchantIndustryCode'
+          description: Successfully retrieved merchant industry codes
+        "400":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST
+                    Description: Method argument type is invalid
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Offset index must not be less than zero
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Limit must not be less than one
+                    Recoverable: true
+                    Details: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Something was wrong with the request.
+        "401":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: UNAUTHORIZED
+                    Description: Project doesn't have access to the requested service
+                    Recoverable: false
+                    Details: Full authentication is required to access this resource
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Authentication information was missing or invalid.
+        "403":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: PERMISSION_DENIED
+                    Description: You don't seem authorized to do that
+                    Recoverable: false
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Insufficient permissions for interacting with the resource.
+      summary: Get all active merchant industry codes
+      tags:
+      - Merchant Industry Codes
+      x-accepts: application/json
+  /merchant-industry-codes/industries/{industry}:
+    get:
+      deprecated: false
+      description: Returns Merchant Industry code details by  Industry code
+      operationId: getByIndustryUsingGET
+      parameters:
+      - description: industry
+        example: ACC
+        explode: false
+        in: path
+        name: industry
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantIndustryCode'
+          description: Successfully retrieved merchant industry code details by industry
+            code
+        "400":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST
+                    Description: Method argument type is invalid
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Offset index must not be less than zero
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Limit must not be less than one
+                    Recoverable: true
+                    Details: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Something was wrong with the request.
+        "401":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: UNAUTHORIZED
+                    Description: Project doesn't have access to the requested service
+                    Recoverable: false
+                    Details: Full authentication is required to access this resource
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Authentication information was missing or invalid.
+        "403":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: PERMISSION_DENIED
+                    Description: You don't seem authorized to do that
+                    Recoverable: false
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Insufficient permissions for interacting with the resource.
+        "404":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: ENTITY_NOT_FOUND
+                    Description: You requested something we don't have
+                    Recoverable: false
+                    Details: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: URI didn't match an existing resource.
+      summary: Get merchant industry code details by industry code
+      tags:
+      - Merchant Industry Codes
+      x-accepts: application/json
+  /places/searches:
+    post:
+      deprecated: false
+      description: Returns detailed information on merchants based on the provided,
+        query parameter
+      operationId: searchPlacesUsingPOST
+      parameters:
+      - description: Maximum number of items to return.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 25
+          example: 25
+          format: int32
+          type: integer
+        style: form
+      - description: Number of items to skip before returning the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          format: int32
+          type: integer
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceSearchRequest'
+        description: placeSearchRequest
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedPlaceInfo'
+          description: Successfully retrieved search results
+        "400":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST
+                    Description: Method argument type is invalid
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Offset index must not be less than zero
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Limit must not be less than one
+                    Recoverable: true
+                    Details: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Something was wrong with the request.
+        "401":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: UNAUTHORIZED
+                    Description: Project doesn't have access to the requested service
+                    Recoverable: false
+                    Details: Full authentication is required to access this resource
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Authentication information was missing or invalid.
+        "403":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: PERMISSION_DENIED
+                    Description: You don't seem authorized to do that
+                    Recoverable: false
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Insufficient permissions for interacting with the resource.
+      summary: 'Search for places '
+      tags:
+      - Places
+      x-contentType: application/json
+      x-accepts: application/json
+  /places/{location_id}:
+    get:
+      deprecated: false
+      description: Returns detailed information on merchants based on the provided,
+        query parameter, locationId
+      operationId: getPlaceByLocationIdUsingGET
+      parameters:
+      - description: location_id
+        example: 300945305
+        explode: false
+        in: path
+        name: location_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceInfo'
+          description: Successfully retrieved detailed information on merchants based
+            on the provided path parameter, locationId
+        "400":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST
+                    Description: Method argument type is invalid
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Offset index must not be less than zero
+                    Recoverable: true
+                    Details: null
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: INVALID_REQUEST_PARAMETER
+                    Description: Limit must not be less than one
+                    Recoverable: true
+                    Details: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Something was wrong with the request.
+        "401":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: UNAUTHORIZED
+                    Description: Project doesn't have access to the requested service
+                    Recoverable: false
+                    Details: Full authentication is required to access this resource
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Authentication information was missing or invalid.
+        "403":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: Gateway
+                    ReasonCode: PERMISSION_DENIED
+                    Description: You don't seem authorized to do that
+                    Recoverable: false
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Insufficient permissions for interacting with the resource.
+        "404":
+          content:
+            application/json:
+              example:
+                Errors:
+                - Error:
+                    Source: location-intelligence-places
+                    ReasonCode: ENTITY_NOT_FOUND
+                    Description: You requested something we don't have
+                    Recoverable: false
+                    Details: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: URI didn't match an existing resource.
+      summary: Get the location details by using location id
+      tags:
+      - Places
+      x-accepts: application/json
+components:
+  responses:
+    BadRequestError:
+      content:
+        application/json:
+          example:
+            Errors:
+            - Error:
+                Source: location-intelligence-places
+                ReasonCode: INVALID_REQUEST
+                Description: Method argument type is invalid
+                Recoverable: true
+                Details: null
+            - Error:
+                Source: location-intelligence-places
+                ReasonCode: INVALID_REQUEST_PARAMETER
+                Description: Offset index must not be less than zero
+                Recoverable: true
+                Details: null
+            - Error:
+                Source: location-intelligence-places
+                ReasonCode: INVALID_REQUEST_PARAMETER
+                Description: Limit must not be less than one
+                Recoverable: true
+                Details: null
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: Something was wrong with the request.
+    UnauthorizedError:
+      content:
+        application/json:
+          example:
+            Errors:
+            - Error:
+                Source: Gateway
+                ReasonCode: UNAUTHORIZED
+                Description: Project doesn't have access to the requested service
+                Recoverable: false
+                Details: Full authentication is required to access this resource
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: Authentication information was missing or invalid.
+    ForbiddenError:
+      content:
+        application/json:
+          example:
+            Errors:
+            - Error:
+                Source: Gateway
+                ReasonCode: PERMISSION_DENIED
+                Description: You don't seem authorized to do that
+                Recoverable: false
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: Insufficient permissions for interacting with the resource.
+    NotFoundError:
+      content:
+        application/json:
+          example:
+            Errors:
+            - Error:
+                Source: location-intelligence-places
+                ReasonCode: ENTITY_NOT_FOUND
+                Description: You requested something we don't have
+                Recoverable: false
+                Details: null
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: URI didn't match an existing resource.
+  schemas:
+    ErrorResponse:
+      description: Only returned in the event of an error condition
+      properties:
+        Errors:
+          $ref: '#/components/schemas/ErrorResponse_Errors'
+      required:
+      - Errors
+      type: object
+    Errors:
+      description: Only returned in the event of an error condition
+      items:
+        $ref: '#/components/schemas/Error'
+      minItems: 1
+      type: array
+    Error:
+      description: Details of the error condition such as the source of the error,
+        reason code for the error, if the error is recoverable, and details about
+        the error
+      properties:
+        Source:
+          description: The application that generated this error
+          example: location-intelligence-places
+          maxLength: 150
+          minLength: 0
+          type: string
+        ReasonCode:
+          description: A unique constant identifying the error case encountered during
+            transaction processing
+          example: INVALID_REQUEST
+          maxLength: 150
+          minLength: 0
+          type: string
+        Description:
+          description: Short description of the ReasonCode field
+          example: Data value or format is invalid
+          maxLength: 150
+          minLength: 0
+          type: string
+        Recoverable:
+          description: Indicates whether this error will always be returned for this
+            request, or retrying could change the outcome
+          example: true
+          type: boolean
+        Details:
+          description: Description of the issue
+          maxLength: 150
+          minLength: 0
+          type: string
+      required:
+      - Description
+      - ReasonCode
+      - Recoverable
+      - Source
+      type: object
+    PageResponse:
+      properties:
+        total:
+          example: 25
+          format: int32
+          type: integer
+        limit:
+          example: 0
+          format: int32
+          type: integer
+        offset:
+          example: 0
+          format: int32
+          type: integer
+      title: PageResponse
+      type: object
+    PagedMerchantCategoryCode:
+      allOf:
+      - $ref: '#/components/schemas/PageResponse'
+      - $ref: '#/components/schemas/PagedMerchantCategoryCode_allOf'
+    PagedMerchantIndustryCode:
+      allOf:
+      - $ref: '#/components/schemas/PageResponse'
+      - $ref: '#/components/schemas/PagedMerchantIndustryCode_allOf'
+    PagedPlaceInfo:
+      allOf:
+      - $ref: '#/components/schemas/PageResponse'
+      - $ref: '#/components/schemas/PagedPlaceInfo_allOf'
+    MerchantCategoryCode:
+      description: Merchant Category Code
+      example:
+        merchantCategoryCode: "0004"
+        merchantCategoryName: AIR CARRIERS  AIRLINES-NOT ELSEWHERE CLASSIFIED
+      properties:
+        merchantCategoryCode:
+          description: This code represents the category that a merchant location
+            may be under and is supported by most payment providers
+          example: "0004"
+          type: string
+        merchantCategoryName:
+          description: This is the name of the Merchant Category that accompanies
+            the MCC Code which identifies the category a merchant falls under
+          example: AIR CARRIERS  AIRLINES-NOT ELSEWHERE CLASSIFIED
+          type: string
+      title: MerchantCategoryCode
+      type: object
+    MerchantIndustryCode:
+      description: Merchant Industry Code
+      example:
+        industryName: Accommodations
+        industry: ACC
+      properties:
+        industry:
+          description: This code represents the industry that a merchant location
+            may be under and is supported by most payments providers
+          example: ACC
+          type: string
+        industryName:
+          description: This is the name of the Industry that accompanies the Industry
+            Code which identifies the industry a merchant falls under
+          example: Accommodations
+          type: string
+      title: MerchantIndustryCode
+      type: object
+    PlaceSearchRequest:
+      description: Place Search Request
+      example:
+        radiusSearch: true
+        unit: MILE
+        distance: 10
+        place:
+          aggregateMerchantId: 0
+          primaryChannelOfDistribution: B
+          telephoneNumber: telephoneNumber
+          legalCorporateName: legalCorporateName
+          superIndustry: superIndustry
+          latitude: "38.7467"
+          postalCode: postalCode
+          industry: industry
+          hasCashBack: true
+          isInBusiness60Day: true
+          merchantName: merchantName
+          stateProvinceCode: MO
+          mccCode: mccCode
+          isInBusiness90Day: true
+          keyAggregateMerchantId: 6
+          cityName: O FALLON
+          countryCode: US
+          isInBusiness360Day: true
+          locationId: 1
+          geocodeQualityIndicator: geocodeQualityIndicator
+          isInBusiness180Day: true
+          longitude: -90.7464
+          naicsCode: naicsCode
+          isInBusiness7Day: true
+          isInBusiness30Day: true
+          dmaCode: dmaCode
+          parentAggregateMerchantName: parentAggregateMerchantName
+          parentAggregateMerchantId: parentAggregateMerchantId
+          hasPayAtThePump: true
+          msaCode: msaCode
+          aggregateMerchantName: aggregateMerchantName
+          hasNfc: true
+          streetAddress: streetAddress
+          isNewBusiness: false
+      properties:
+        distance:
+          description: Distance measurement for calculating the radius search. The
+            length of distance from the centroid point. Value integer(<15).
+          example: 10
+          format: int64
+          type: integer
+        place:
+          $ref: '#/components/schemas/PlaceFilter'
+        radiusSearch:
+          description: Switches on the radius search algorithm to be performed with
+            places from a given centroid. Value boolean (true) switches on the radius
+            search algorithm. NOTE - Distance, Latitude and Longitude are REQUIRED
+            for radius search algorithm
+          example: true
+          type: boolean
+        unit:
+          description: Unit of measurement for calculating the radius search. Optional.
+            Measurement of distance unit in miles or kilometers. Value string (m or
+            km
+          enum:
+          - MILE
+          - KM
+          type: string
+      title: PlaceSearchRequest
+      type: object
+    PlaceFilter:
+      description: Place Filter
+      example:
+        aggregateMerchantId: 0
+        primaryChannelOfDistribution: B
+        telephoneNumber: telephoneNumber
+        legalCorporateName: legalCorporateName
+        superIndustry: superIndustry
+        latitude: "38.7467"
+        postalCode: postalCode
+        industry: industry
+        hasCashBack: true
+        isInBusiness60Day: true
+        merchantName: merchantName
+        stateProvinceCode: MO
+        mccCode: mccCode
+        isInBusiness90Day: true
+        keyAggregateMerchantId: 6
+        cityName: O FALLON
+        countryCode: US
+        isInBusiness360Day: true
+        locationId: 1
+        geocodeQualityIndicator: geocodeQualityIndicator
+        isInBusiness180Day: true
+        longitude: -90.7464
+        naicsCode: naicsCode
+        isInBusiness7Day: true
+        isInBusiness30Day: true
+        dmaCode: dmaCode
+        parentAggregateMerchantName: parentAggregateMerchantName
+        parentAggregateMerchantId: parentAggregateMerchantId
+        hasPayAtThePump: true
+        msaCode: msaCode
+        aggregateMerchantName: aggregateMerchantName
+        hasNfc: true
+        streetAddress: streetAddress
+        isNewBusiness: false
+      properties:
+        aggregateMerchantId:
+          description: Filter results by the aggregate merchant ID
+          format: int64
+          type: integer
+        aggregateMerchantName:
+          description: Filter results by the aggregate merchant name
+          type: string
+        cityName:
+          description: The city for the desired location
+          example: O FALLON
+          type: string
+        countryCode:
+          description: The country code for the desired location
+          example: US
+          type: string
+        dmaCode:
+          description: Filter results by the DMA code
+          type: string
+        geocodeQualityIndicator:
+          description: Utilize to only return businesses with the certain characteristics
+            like a rooftop
+          type: string
+        hasCashBack:
+          description: Utilize to only return locations that have cash back
+          type: boolean
+        hasNfc:
+          description: Utilize to only return locations that support nfc
+          example: true
+          type: boolean
+        hasPayAtThePump:
+          description: Utilize to only return locations that have pay at the pump
+          type: boolean
+        industry:
+          description: The industry for the desired location
+          type: string
+        isInBusiness180Day:
+          description: Utilize to only return businesses that have had business the
+            last 180 days
+          type: boolean
+        isInBusiness30Day:
+          description: Utilize to only return businesses that have had business the
+            last 30 days
+          type: boolean
+        isInBusiness360Day:
+          description: Utilize to only return businesses that have had business the
+            last 360 days
+          type: boolean
+        isInBusiness60Day:
+          description: Utilize to only return businesses that have had business the
+            last 60 days
+          type: boolean
+        isInBusiness7Day:
+          description: Utilize to only return businesses that have had business the
+            last 7 days
+          type: boolean
+        isInBusiness90Day:
+          description: Utilize to only return businesses that have had business the
+            last 90 days
+          type: boolean
+        isNewBusiness:
+          description: Utilize to only return new or recently opened businesses
+          example: false
+          type: boolean
+        keyAggregateMerchantId:
+          description: Filter results by the key aggregate merchant ID
+          format: int64
+          type: integer
+        latitude:
+          description: Utilize to only return businesses at the selected latitude
+          example: "38.7467"
+          type: string
+        legalCorporateName:
+          description: The legal corporate name for the desired location
+          type: string
+        locationId:
+          description: Filter results by the Location ID
+          format: int64
+          type: integer
+        longitude:
+          description: Utilize to only return businesses at the selected longitude
+          example: -90.7464
+          type: string
+        mccCode:
+          description: Filter results by the Merchant Category Code
+          type: string
+        merchantName:
+          description: The merchant name for the desired location
+          type: string
+        msaCode:
+          description: Filter results by the MSA code
+          type: string
+        naicsCode:
+          description: Filter results by the NAICS code
+          type: string
+        parentAggregateMerchantId:
+          description: Filter results by the parent aggregate merchant ID
+          type: string
+        parentAggregateMerchantName:
+          description: Filter results by the parent aggregate merchant name
+          type: string
+        postalCode:
+          description: The postal code for the desired location
+          type: string
+        primaryChannelOfDistribution:
+          description: Utilize to only return businesses that utilize Brick and Mortar
+            or Web as their primary channel. O = Online / Ecommerce, B = Brick & Mortar,
+            N = Non-Store Retail
+          example: B
+          type: string
+        stateProvinceCode:
+          description: The state for the desired location
+          example: MO
+          type: string
+        streetAddress:
+          description: The street address for the desired location
+          type: string
+        superIndustry:
+          description: The super industry for the desired location
+          type: string
+        telephoneNumber:
+          description: The telephone number for the desired location
+          type: string
+      required:
+      - countryCode
+      title: PlaceFilter
+      type: object
+    PlaceInfo:
+      description: Place Info
+      example:
+        aggregateMerchantId: 12077
+        primaryChannelOfDistribution: B
+        telephoneNumber: "6362814068"
+        lastSeenWeek: 03/30/2020-04/05/2020
+        legalCorporateName: BROWN SHOE COMPANY INC
+        superIndustry: AAP
+        cleansedTelephoneNumber: "6362814068"
+        latitude: 38.778083
+        postalCode: "63368"
+        industry: SHS
+        cleansedStreetAddress: 2254 HIGHWAY K
+        firstSeenWeek: 04/08/2019-04/14/2019
+        hasCashBack: false
+        isInBusiness60Day: true
+        merchantName: FAMOUSFOOTWEAR#1749
+        stateProvinceCode: MO
+        mccCode: "5661"
+        isInBusiness90Day: true
+        keyAggregateMerchantId: 12077
+        cityName: O FALLON
+        countryCode: US
+        isInBusiness360Day: true
+        locationId: 300945305
+        geocodeQualityIndicator: STOREFRONT
+        isInBusiness180Day: true
+        cleansedCityName: O FALLON
+        cleansedStateProvinceCode: MO
+        longitude: -90.699706
+        naicsCode: "448210"
+        cleansedLegalCorporateName: BROWN SHOE COMPANY INC
+        isInBusiness7Day: true
+        isInBusiness30Day: true
+        dmaCode: "609"
+        parentAggregateMerchantName: CALERES INC
+        cleansedMerchantName: 'FAMOUS FOOTWEAR #1749'
+        cleansedPostalCode: 63368-7929
+        cleansedCountryCode: US
+        parentAggregateMerchantId: "10002109"
+        hasPayAtThePump: false
+        msaCode: "7040"
+        aggregateMerchantName: FAMOUS FOOTWEAR
+        hasNfc: true
+        streetAddress: 2254 HWY K
+        isNewBusiness: false
+      properties:
+        aggregateMerchantId:
+          description: Merchant Aggregate ID groups merchant locations by chain. This
+            is the first level of aggregation
+          example: 12077
+          format: int64
+          type: integer
+        aggregateMerchantName:
+          description: The aggregate merchant name of this merchant location
+          example: FAMOUS FOOTWEAR
+          type: string
+        cityName:
+          description: The city for the desired location
+          example: O FALLON
+          type: string
+        cleansedCityName:
+          description: The cleansed city name is provided by Mastercard matching its
+            transaction data with another Data Partner to ensure standardization
+          example: O FALLON
+          type: string
+        cleansedCountryCode:
+          description: The cleansed country code is provided by Mastercard matching
+            its transaction data with another Data Partner to ensure standardization
+          example: US
+          type: string
+        cleansedLegalCorporateName:
+          description: The cleansed legal corporate name is provided by Mastercard
+            matching its transaction data with another Data Partner to ensure standardization
+          example: BROWN SHOE COMPANY INC
+          type: string
+        cleansedMerchantName:
+          description: The cleansed merchant name is provided by Mastercard matching
+            its transaction data with another Data Partner to ensure standardization
+          example: 'FAMOUS FOOTWEAR #1749'
+          type: string
+        cleansedPostalCode:
+          description: The cleansed postal code is provided by Mastercard matching
+            its transaction data with another Data Partner to ensure standardization
+          example: 63368-7929
+          type: string
+        cleansedStateProvinceCode:
+          description: The cleansed state is provided by Mastercard matching its transaction
+            data with another Data Partner
+          example: MO
+          type: string
+        cleansedStreetAddress:
+          description: The cleansed street address is provided by Mastercard matching
+            its transaction data with another Data Partner to ensure standardization
+          example: 2254 HIGHWAY K
+          type: string
+        cleansedTelephoneNumber:
+          description: The cleansed telephone number is provided by Mastercard matching
+            its transaction data with another Data Partner to ensure standardization
+          example: "6362814068"
+          type: string
+        countryCode:
+          description: The country code for the desired location
+          example: US
+          type: string
+        firstSeenWeek:
+          description: Week of the year for the first transaction
+          example: 04/08/2019-04/14/2019
+          type: string
+        lastSeenWeek:
+          description: Week of the year for the last transaction
+          example: 03/30/2020-04/05/2020
+          type: string
+        dmaCode:
+          description: A Designated Market Area or a DMA is a geographic  area that  represents
+            specific television markets as defined by and updated annually by the
+            Nielsen Company. (US Only)
+          example: "609"
+          type: string
+        geocodeQualityIndicator:
+          description: Geocoding quality indicating the specificity of the geo location
+            such as Storefront, Rooftop, Street, Postcode, Admin, Other or None
+          example: STOREFRONT
+          type: string
+        hasCashBack:
+          description: Indicates if the merchants provides cash back
+          example: false
+          type: boolean
+        hasNfc:
+          description: Indicates if the merchant supports near field communications
+            (nfc)
+          example: true
+          type: boolean
+        hasPayAtThePump:
+          description: Indicates if a merchant has pay at the pump
+          example: false
+          type: boolean
+        industry:
+          description: The industry for the desired location
+          example: SHS
+          type: string
+        isInBusiness180Day:
+          description: Indicates if this location was in business in the last 180
+            days
+          example: true
+          type: boolean
+        isInBusiness30Day:
+          description: Indicates if this location was in business in the last 30 days
+          example: true
+          type: boolean
+        isInBusiness360Day:
+          description: Indicates if this location was in business in the last in the
+            last 360 days
+          example: true
+          type: boolean
+        isInBusiness60Day:
+          description: Indicates if this location was in business in the last 60 days
+          example: true
+          type: boolean
+        isInBusiness7Day:
+          description: Indicates if this location was in business in the last 7 days
+          example: true
+          type: boolean
+        isInBusiness90Day:
+          description: Indicates if this location was in business in the last 90 days
+          example: true
+          type: boolean
+        isNewBusiness:
+          description: Indicates if new or recently opened businesses
+          example: false
+          type: boolean
+        keyAggregateMerchantId:
+          description: The Mastercard defined key aggregate merchant id joins together
+            different channels of one merchant under the same id
+          example: 12077
+          format: int64
+          type: integer
+        latitude:
+          description: The latitude geo coordinate position of this merchant location
+            up to 6 decimal precision digits
+          example: 38.778083
+          format: double
+          type: number
+        legalCorporateName:
+          description: The legal corporate name for the desired location
+          example: BROWN SHOE COMPANY INC
+          type: string
+        locationId:
+          description: The Mastercard assigned location id representing this merchant
+            location
+          example: 300945305
+          format: int64
+          type: integer
+        longitude:
+          description: The longitude geo coordinate position of this merchant location
+            up to 6 decimal precision digits
+          example: -90.699706
+          format: double
+          type: number
+        mccCode:
+          description: The Merchant Category Code for the desired location
+          example: "5661"
+          type: string
+        merchantName:
+          description: The merchant name for the desired location
+          example: FAMOUSFOOTWEAR#1749
+          type: string
+        msaCode:
+          description: The metropolitan statistical area (US only). These codes group
+            merchants into metropolitan area
+          example: "7040"
+          type: string
+        naicsCode:
+          description: North American Industry Classification System Code
+          example: "448210"
+          type: string
+        parentAggregateMerchantId:
+          description: The ID code for the parent aggregate merchant of this merchant
+            location. This helps to further aggregate merchants under one identifier
+          example: "10002109"
+          type: string
+        parentAggregateMerchantName:
+          description: The name for the parent aggregate merchant of this merchant
+            location. This helps to further aggregate merchants under one identifier
+          example: CALERES INC
+          type: string
+        postalCode:
+          description: The postal code for the desired location
+          example: "63368"
+          type: string
+        primaryChannelOfDistribution:
+          description: Return businesses that utilize Brick and Mortar or Web as their
+            primary channel. \r\nO = Online - Ecommerce, B = Brick and Mortar, N =
+            Non-Store Retail
+          example: B
+          type: string
+        stateProvinceCode:
+          description: The state for the desired location
+          example: MO
+          type: string
+        streetAddress:
+          description: The street address for the desired location
+          example: 2254 HWY K
+          type: string
+        superIndustry:
+          description: The super industry for the desired location
+          example: AAP
+          type: string
+        telephoneNumber:
+          description: The telephone number for the desired location
+          example: "6362814068"
+          type: string
+      required:
+      - countryCode
+      - locationId
+      title: PlaceInfo
+      type: object
+    ErrorResponse_Errors:
+      properties:
+        Error:
+          description: Only returned in the event of an error condition
+          items:
+            $ref: '#/components/schemas/Error'
+          minItems: 1
+          type: array
+      required:
+      - Error
+      type: object
+    PagedMerchantCategoryCode_allOf:
+      description: Paged response of Merchant Category Codes
+      properties:
+        items:
+          description: Array of Merchant Category Codes
+          items:
+            $ref: '#/components/schemas/MerchantCategoryCode'
+          type: array
+      required:
+      - items
+      type: object
+    PagedMerchantIndustryCode_allOf:
+      description: Paged response of Merchant Industry Codes
+      properties:
+        items:
+          description: Array of Merchant Industry Codes
+          items:
+            $ref: '#/components/schemas/MerchantIndustryCode'
+          type: array
+      required:
+      - items
+      type: object
+    PagedPlaceInfo_allOf:
+      description: Paged response of Merchant Industry Codes
+      properties:
+        items:
+          description: Array of Places
+          items:
+            $ref: '#/components/schemas/PlaceInfo'
+          type: array
+      required:
+      - items
+      type: object
+
